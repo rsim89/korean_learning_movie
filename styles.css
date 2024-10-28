@@ -130,6 +130,7 @@ body {
     font-weight: bold;
     color: #ffffff; /* White text */
     background-color: #000000; /* Black background */
+    font-family: 'Noto Sans KR', sans-serif; /* Apply Noto Sans KR font */
 }
 
 .english-box {
