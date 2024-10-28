@@ -66,6 +66,30 @@ body {
     font-weight: bold;
 }
 
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    position: relative;
+    text-align: center;
+}
+
 .popup {
     display: none;
     position: fixed;
@@ -154,7 +178,6 @@ body {
     border-color: #007bff; /* Border color to match highlight */
 }
 
-/* General button styles for all buttons */
 button {
     background-color: #6c757d; /* Gray background color */
     color: white; /* Text color */
@@ -179,9 +202,14 @@ button:focus {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a shadow effect for focus */
 }
 
-/* Specific styles for toggle-mode-button */
 #toggle-mode-button {
     width: 200px; /* Set a different width */
     padding: 14px; /* Adjust padding for larger size */
     font-size: 16px; /* Increase font size */
+}
+
+.subtitle-blocks-popup {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
 }
