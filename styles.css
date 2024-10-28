@@ -206,7 +206,7 @@ button:focus {
 
 /* Styling for individual subtitle blocks in the popup */
 .highlighted-subtitle-block {
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 10px;
     border: 1px solid #bbb;
     border-radius: 6px; /* Softer corners */
