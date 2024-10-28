@@ -128,7 +128,8 @@ body {
 
 .korean-box {
     font-weight: bold;
-    background-color: #e1f7d5; /* Light green background for emphasis */
+    color: #ffffff; /* White text */
+    background-color: #750000; /* Deep red background (진빨강) */
 }
 
 .english-box {
