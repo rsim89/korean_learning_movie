@@ -14,16 +14,11 @@ const endIndexInput = document.getElementById("end-index");
 const startButton = document.getElementById("start-button");
 const searchResultsContainer = document.getElementById("search-results-container");
 const searchPopup = document.getElementById("search-results");
-const showPopupButton = document.getElementById("show-popup-button");
 
 let koreanSubtitles = [];
 let englishSubtitles = [];
 let segmentDirectory = ""; // Declare segmentDirectory in the global scope
 toggleModeButton.textContent = `Mode: ${mode}`; // Display initial mode on the button
-
-
-// Add a click event listener to call showUpdatedSubtitlesInPopup when the button is clicked
-showPopupButton.addEventListener("click", showUpdatedSubtitlesInPopup);
 
 // Event listener to scroll through modes
 toggleModeButton.addEventListener("click", () => {
@@ -320,84 +315,3 @@ function updateDisplayedSubtitles(startIndex, segmentCount, currentSegment = 0, 
         document.getElementById('reset-button').addEventListener('click', function() {
             location.reload(); // Refresh the page
         });
-
-// Function to create a popup for the displayed subtitles
-function showSubtitlePopup(startIndex, segmentCount) {
-    // Create popup overlay
-    const popupOverlay = document.createElement("div");
-    popupOverlay.className = "popup-overlay";
-
-    // Create popup content container
-    const popupContent = document.createElement("div");
-    popupContent.className = "popup-content";
-
-    // Subtitle blocks container inside the popup
-    const subtitleBlocksContainerInPopup = document.createElement("div");
-    subtitleBlocksContainerInPopup.className = "subtitle-blocks-popup";
-
-    // Update displayed subtitles and render them inside the popup container
-    updateDisplayedSubtitlesInPopup(startIndex, segmentCount, subtitleBlocksContainerInPopup);
-
-    // Append the subtitle blocks container to the popup content
-    popupContent.appendChild(subtitleBlocksContainerInPopup);
-
-    // Close button for popup
-    const closeButton = document.createElement("button");
-    closeButton.className = "popup-close";
-    closeButton.textContent = "Close";
-    closeButton.addEventListener("click", () => {
-        document.body.removeChild(popupOverlay);
-    });
-    popupContent.appendChild(closeButton);
-
-    // Append the popup content to the overlay and add it to the body
-    popupOverlay.appendChild(popupContent);
-    document.body.appendChild(popupOverlay);
-}
-
-// New function to update displayed subtitles in the popup
-function updateDisplayedSubtitlesInPopup(startIndex, segmentCount, container) {
-    container.innerHTML = '';
-
-    // Calculate the end index based on the startIndex and segmentCount
-    const end = Math.min(koreanSubtitles.length - 1, startIndex + segmentCount - 2);
-
-    // Loop through the range of subtitles to create blocks
-    for (let i = startIndex - 1; i <= end; i++) {
-        if (i >= 0 && i < koreanSubtitles.length) { // Ensure we are within the bounds of the array
-            const div = document.createElement("div");
-            div.className = "subtitle-block";
-
-            const indexBox = document.createElement("div");
-            indexBox.className = "index-box";
-            const timestamp = koreanSubtitles[i]?.timestamp || "";
-            indexBox.textContent = `${i + 1} | ${timestamp}`;
-            div.appendChild(indexBox);
-
-            const koreanText = koreanSubtitles[i]?.text || "";
-            const koreanBox = document.createElement("div");
-            koreanBox.className = "korean-box";
-            koreanBox.textContent = koreanText;
-
-            if (mode === "Korean+English") {
-                const englishText = englishSubtitles[i]?.text || "";
-                const englishBox = document.createElement("div");
-                englishBox.className = "english-box";
-                englishBox.textContent = englishText;
-                div.appendChild(englishBox);
-            }
-
-            div.dataset.index = i + 1;
-            container.appendChild(div);
-        }
-    }
-}
-
-// Example usage to show the updated subtitles in a popup
-// Call this function with a startIndex and segmentCount when you want to show subtitles in a popup
-function showUpdatedSubtitlesInPopup() {
-    const startIndex = parseInt(startIndexInput.value, 10) || 1;
-    const segmentCount = parseInt(segmentCountInput.value, 10) || 5;
-
-    showSubtitlePopup(startIndex, segmentCount);
-}
