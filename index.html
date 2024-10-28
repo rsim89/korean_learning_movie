@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video with Clickable Subtitle Blocks</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the external CSS file -->
+</head>
+<body>
+    <div class="container">
+        <h1>Goblin 도깨비 - Episode <span id="episode-number">1</span></h1>
+        
+        <label for="episode-select">Select Episode:</label>
+        <select id="episode-select">
+            <option value="1">Episode 1</option>
+            <option value="2">Episode 2</option>
+            <option value="3">Episode 3</option>
+            <option value="4">Episode 4</option>
+            <option value="5">Episode 5</option>
+            <option value="6">Episode 6</option>
+            <option value="7">Episode 7</option>
+            <option value="8">Episode 8</option>
+            <option value="9">Episode 9</option>
+        </select>
+
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="Search subtitles..." />
+            <button id="search-button">Search</button>
+            <button id="toggle-mode-button">Mode: Korean only</button>
+            <button id="reset-button">Reset</button> <!-- Reset button -->
+        </div>
+
+        <video id="video-player" controls preload="auto">
+            Your browser does not support the video tag.
+        </video>
+
+        <div class="controls">
+            <label for="segment-count">Segments to play (min: 5): </label>
+            <input type="number" id="segment-count" min="5" value="5" />
+            <label for="start-index">Start Index: </label>
+            <input type="number" id="start-index" min="1" />
+            <label for="end-index">End Index: </label>
+            <input type="number" id="end-index" min="1" />
+            <button id="start-button">Start</button>
+        </div>
+
+        <div id="subtitle-blocks" class="subtitle-blocks" role="complementary" aria-labelledby="subtitle-heading">
+            <h2 id="subtitle-heading" style="display: none;">Subtitle Blocks</h2>
+        </div>
+    </div>
+
+    <div id="search-results" class="popup">
+        <span class="popup-close" onclick="togglePopup()">×</span>
+        <h2>Search Results</h2>
+        <div id="search-results-container"></div>
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
