@@ -69,52 +69,6 @@ function createSubtitleBlock(subtitleIndex) {
 
     div.dataset.index = subtitleIndex;
     subtitleBlocksContainer.appendChild(div);
-
-    // Event listener to open subtitle as a popup
-    div.addEventListener("click", () => showSubtitlePopup(subtitleIndex));
-}
-
-
-function showSubtitlePopup(subtitleIndex) {
-    // Create popup overlay
-    const popupOverlay = document.createElement("div");
-    popupOverlay.className = "popup-overlay";
-    
-    // Create popup content container
-    const popupContent = document.createElement("div");
-    popupContent.className = "popup-content";
-    
-    const indexBox = document.createElement("div");
-    indexBox.className = "index-box";
-    const timestamp = koreanSubtitles[subtitleIndex - 1]?.timestamp || "";
-    indexBox.textContent = `${subtitleIndex} | ${timestamp}`;
-    popupContent.appendChild(indexBox);
-
-    const koreanText = koreanSubtitles[subtitleIndex - 1]?.text || "";
-    const koreanBox = document.createElement("div");
-    koreanBox.className = "korean-box";
-    koreanBox.textContent = koreanText;
-    popupContent.appendChild(koreanBox);
-
-    if (mode === "Korean+English") {
-        const englishText = englishSubtitles[subtitleIndex - 1]?.text || "";
-        const englishBox = document.createElement("div");
-        englishBox.className = "english-box";
-        englishBox.textContent = englishText;
-        popupContent.appendChild(englishBox);
-    }
-
-    // Close button
-    const closeButton = document.createElement("button");
-    closeButton.className = "popup-close";
-    closeButton.textContent = "Close";
-    closeButton.addEventListener("click", () => {
-        document.body.removeChild(popupOverlay);
-    });
-    popupContent.appendChild(closeButton);
-
-    popupOverlay.appendChild(popupContent);
-    document.body.appendChild(popupOverlay);
 }
 
 // Set default episode to 1
