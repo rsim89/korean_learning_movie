@@ -2,7 +2,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Noto Sans KR', 'Arial', sans-serif;
     font-size: 1em; /* Increased base font size for better readability */
     margin: 0;
     padding: 0;
@@ -128,12 +128,14 @@ body {
 
 .korean-box {
     font-weight: bold;
-    background-color: #e1f7d5; /* Light green background for emphasis */
+    color: #ffffff; /* White text */
+    background-color: #000000; /* Black background */
+    font-family: 'Noto Sans KR', sans-serif; /* Apply Noto Sans KR font */
 }
 
 .english-box {
     color: #555;
-    background-color: #e8f0fe; /* Light blue background for emphasis */
+    background-color: #f2f8ff; /* Lighter blue background for emphasis */
 }
 
 .index-box {
@@ -184,4 +186,48 @@ button:focus {
     width: 200px; /* Set a different width */
     padding: 14px; /* Adjust padding for larger size */
     font-size: 16px; /* Increase font size */
+}
+
+/* Styling for the movable subtitle popup */
+#popup-subtitle-container {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Ensure it stays on top of other elements */
+    cursor: move; /* Cursor change to indicate draggable */
+    overflow-y: auto;
+    max-height: 400px; /* Control max height to avoid taking too much space */
+}
+
+/* Styling for individual subtitle blocks in the popup */
+.highlighted-subtitle-block {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #bbb;
+    border-radius: 6px; /* Softer corners */
+    background-color: rgba(204, 224, 255, 0.6); /* Light blue for highlighting */
+    font-size: 1em; /* Consistent font size */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+}
+
+/* Close button for the popup */
+#popup-subtitle-container .popup-close {
+    cursor: pointer;
+    color: #555;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-weight: bold;
+    font-size: 1.3em; /* Increased size for better visibility */
+    transition: color 0.2s;
+}
+
+#popup-subtitle-container .popup-close:hover {
+    color: #e60000; /* Red color on hover to indicate closing */
 }

@@ -37,7 +37,21 @@ toggleModeButton.addEventListener("click", () => {
             englishBox.style.display = mode === "Korean+English" ? "block" : "none";
         }
     });
+
+    // Update the popup subtitles if the popup is currently open
+    const popupContainer = document.getElementById("popup-subtitle-container");
+    if (popupContainer && popupContainer.style.display === 'block') {
+        // Use current playback state to update the popup
+        const startIndex = currentPlaybackStartIndex;
+        const segmentCount = currentPlaybackSegmentCount;
+        const currentSegment = currentPlaybackSegment;
+        const currentIndex = startIndex + currentSegment;
+
+        // Call updatePopUpDisplayedSubtitles to reflect the new mode in the popup
+        updatePopUpDisplayedSubtitles(startIndex, segmentCount, currentSegment, currentIndex, startIndexHighlighted);
+    }
 });
+
 
 // Function to create a subtitle block
 function createSubtitleBlock(subtitleIndex) {
@@ -191,8 +205,12 @@ startButton.addEventListener("click", () => {
     const startIndex = parseInt(startIndexInput.value, 10);
     const endIndex = parseInt(endIndexInput.value, 10);
 
+    // Ensure input values are valid before stopping any ongoing playback
     if (!isNaN(startIndex) && !isNaN(endIndex) && endIndex >= startIndex) {
+        // Stop any ongoing playback before starting the new one
         stopPlayback();
+        
+        // Start playing the segments based on the provided indices
         playSegments(startIndex, endIndex - startIndex + 1);
         updateDisplayedSubtitles(startIndex, endIndex - startIndex + 1);
     } else {
@@ -249,9 +267,14 @@ function togglePopup() {
 }
 
 function playSegments(startIndex, count) {
+    // Update playback state variables
+    currentPlaybackStartIndex = startIndex;
+    currentPlaybackSegmentCount = count;
+    currentPlaybackSegment = 0; // Start from the first segment
+    startIndexHighlighted = false;
+
     isPlayingSegments = true;
     const segmentFiles = [];
-    let startIndexHighlighted = false; // Track if startIndex has been highlighted initially
 
     for (let i = 0; i < count; i++) {
         segmentFiles.push(`${segmentDirectory}\\segment_${String(startIndex + i).padStart(3, '0')}.mp4`);
@@ -261,6 +284,7 @@ function playSegments(startIndex, count) {
 
     const playNextSegment = () => {
         if (currentSegment < segmentFiles.length) {
+            currentPlaybackSegment = currentSegment; // Update the current segment being played
             const segmentFile = segmentFiles[currentSegment];
             videoPlayer.src = segmentFile;
             videoPlayer.load();
@@ -269,11 +293,16 @@ function playSegments(startIndex, count) {
                 videoPlayer.play().catch(error => console.error('Error playing the video:', error));
             }, { once: true });
 
-            // Calculate current index and highlight based on initial or current index
+            // Calculate the current index of the segment
             const currentIndex = startIndex + currentSegment;
             updateDisplayedSubtitles(startIndex, count, currentSegment, currentIndex, startIndexHighlighted);
 
-            // Set startIndexHighlighted to true after the first update
+            // Check if the popup is open and update the popup subtitles if it is
+            const popupContainer = document.getElementById("popup-subtitle-container");
+            if (popupContainer && popupContainer.style.display === 'block') {
+                updatePopUpDisplayedSubtitles(startIndex, count, currentSegment, currentIndex, startIndexHighlighted);
+            }
+
             if (!startIndexHighlighted) {
                 startIndexHighlighted = true;
             }
@@ -287,6 +316,8 @@ function playSegments(startIndex, count) {
 
     playNextSegment();
 }
+
+
 
 function stopPlayback() {
     videoPlayer.pause();
@@ -315,3 +346,126 @@ function updateDisplayedSubtitles(startIndex, segmentCount, currentSegment = 0, 
         document.getElementById('reset-button').addEventListener('click', function() {
             location.reload(); // Refresh the page
         });
+
+// Function to create or update the popup with subtitles
+function updatePopUpDisplayedSubtitles(startIndex, segmentCount, currentSegment = 0, currentIndex, startIndexHighlighted) {
+    let popupContainer = document.getElementById("popup-subtitle-container");
+
+    // If the popup doesn't exist yet, create it
+    if (!popupContainer) {
+        popupContainer = document.createElement("div");
+        popupContainer.id = "popup-subtitle-container";
+        popupContainer.className = "popup-container";
+
+        // Style the popup for better visibility and movement
+        popupContainer.style.position = "absolute";
+        popupContainer.style.top = "50px";
+        popupContainer.style.left = "50px";
+        popupContainer.style.backgroundColor = "white";
+        popupContainer.style.border = "1px solid #ccc";
+        popupContainer.style.padding = "10px";
+        popupContainer.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+        popupContainer.style.cursor = "move";
+        popupContainer.style.maxHeight = "400px";
+        popupContainer.style.overflowY = "auto";
+        popupContainer.style.zIndex = "1000";
+
+        document.body.appendChild(popupContainer);
+        
+        // Add drag-and-drop functionality to make the popup movable
+        makePopupDraggable(popupContainer);
+    }
+
+    // Clear existing content in the popup container
+    popupContainer.innerHTML = '';
+
+    // Calculate the end index based on the startIndex and segmentCount
+    const end = Math.min(koreanSubtitles.length - 1, startIndex + segmentCount - 2);
+
+    // Loop through the range of subtitles to create blocks and show only highlighted ones
+    for (let i = startIndex - 1; i <= end; i++) {
+        if (i >= 0 && i < koreanSubtitles.length) {
+            if ((!startIndexHighlighted && i + 1 === startIndex) || i + 1 === currentIndex) {
+                // Create only highlighted blocks
+                const div = document.createElement("div");
+                div.className = "highlighted-subtitle-block";
+
+                const indexBox = document.createElement("div");
+                indexBox.className = "index-box";
+                const timestamp = koreanSubtitles[i]?.timestamp || "";
+                indexBox.textContent = `${i + 1} | ${timestamp}`;
+                div.appendChild(indexBox);
+
+                const koreanText = koreanSubtitles[i]?.text || "";
+                const koreanBox = document.createElement("div");
+                koreanBox.className = "korean-box";
+                koreanBox.textContent = koreanText;
+                div.appendChild(koreanBox);
+
+                if (mode === "Korean+English") {
+                    const englishText = englishSubtitles[i]?.text || "";
+                    const englishBox = document.createElement("div");
+                    englishBox.className = "english-box";
+                    englishBox.textContent = englishText;
+                    div.appendChild(englishBox);
+                }
+
+                popupContainer.appendChild(div);
+            }
+        }
+    }
+
+    // Add double-click event listener to close the popup when double-clicking inside of it
+    popupContainer.ondblclick = () => {
+        popupContainer.style.display = 'none';
+    };
+}
+
+
+// Function to make the popup draggable
+function makePopupDraggable(popupElement) {
+    let offsetX = 0, offsetY = 0, isDragging = false;
+
+    popupElement.addEventListener('mousedown', (e) => {
+        // Check if the target is the resize handle, if so, do nothing
+        if (e.target.classList.contains('resize-handle')) return;
+
+        isDragging = true;
+        offsetX = e.clientX - popupElement.offsetLeft;
+        offsetY = e.clientY - popupElement.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            popupElement.style.left = `${e.clientX - offsetX}px`;
+            popupElement.style.top = `${e.clientY - offsetY}px`;
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+}
+
+
+// Event listener for showing highlighted subtitles in popup
+document.getElementById('show-highlighted-popup').addEventListener('click', () => {
+    // Retrieve the current playback status variables
+    const startIndex = currentPlaybackStartIndex;
+    const segmentCount = currentPlaybackSegmentCount;
+    const currentSegment = currentPlaybackSegment;
+    const currentIndex = startIndex + currentSegment;
+
+    // Ensure values are valid before updating the popup
+    if (!isNaN(startIndex) && !isNaN(segmentCount)) {
+        updatePopUpDisplayedSubtitles(startIndex, segmentCount, currentSegment, currentIndex, startIndexHighlighted);
+        
+        // Display the popup
+        const popupContainer = document.getElementById('popup-subtitle-container');
+        if (popupContainer) {
+            popupContainer.style.display = 'block';
+        }
+    } else {
+        alert("Please enter valid Start and Segment indices.");
+    }
+});
