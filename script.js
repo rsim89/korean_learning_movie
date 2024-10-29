@@ -27,7 +27,7 @@ let koreanSubtitles = [];
 let englishSubtitles = [];
 let segmentDirectory = ""; // Declare segmentDirectory in the global scope
 let isSubtitleHighlighted = false; // Track if highlighted subtitles are shown
-toggleModeButton.querySelector("img").src = "/images/korean.svg"; // Set initial mode icon
+toggleModeButton.querySelector("img").src = "/korean_learning_movie/images/korean.svg"; // Set initial mode icon
 
 // Set default episode to 1
 episodeSelect.value = "1";
@@ -89,10 +89,10 @@ toggleModeButton.addEventListener("click", () => {
     // Update button icon and alt text based on the current mode
     const modeImage = toggleModeButton.querySelector("img");
     if (mode === "Korean only") {
-        modeImage.src = "/images/korean.svg";
+        modeImage.src = "/korean_learning_movie/images/korean.svg";
         modeImage.alt = "Mode: Korean only";
     } else {
-        modeImage.src = "/images/english.svg";
+        modeImage.src = "/korean_learning_movie/images/english.svg";
         modeImage.alt = "Mode: Korean + English";
     }
 
@@ -222,13 +222,13 @@ showHighlightedButton.addEventListener("click", () => {
     const subtitleBlocksContainer = document.getElementById("subtitle-blocks");
 
     if (isSubtitleHighlighted) {
-        subtitleImage.src = "/images/subtitleon.svg";
+        subtitleImage.src = "/korean_learning_movie/images/subtitleon.svg";
         subtitleImage.alt = "Show Highlighted Subtitles";
         
         // Show subtitle blocks container
         subtitleBlocksContainer.style.display = 'block';
     } else {
-        subtitleImage.src = "/images/subtitleoff.svg";
+        subtitleImage.src = "/korean_learning_movie/images/subtitleoff.svg";
         subtitleImage.alt = "Hide Highlighted Subtitles";
         
         // Hide subtitle blocks container
@@ -436,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const elaborationImage = document.getElementById("toggle-elaboration-button").querySelector("img");
 
         if (isElaborationOn) {
-            elaborationImage.src = "/images/elaborationon.svg";
+            elaborationImage.src = "/korean_learning_movie/images/elaborationon.svg";
             elaborationImage.alt = "Show Elaboration";
 
             const startIndex = parseInt(currentPlaybackStartIndex, 10);
@@ -449,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.warn("Invalid startIndex or segmentCount provided.");
             }
         } else {
-            elaborationImage.src = "/images/elaborationoff.svg";
+            elaborationImage.src = "/korean_learning_movie/images/elaborationoff.svg";
             elaborationImage.alt = "Hide Elaboration";
             popupContainer.style.display = "none";
         }
