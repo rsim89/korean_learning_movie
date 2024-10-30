@@ -176,6 +176,7 @@ button#start-button:hover {
     background-color: #e3e9ff;
 }
 
+/* Close Button Styling */
 .popup-close {
     cursor: pointer;
     color: #777;
